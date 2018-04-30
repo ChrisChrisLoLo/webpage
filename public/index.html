@@ -14,7 +14,7 @@
 		<script src="js/three.js"></script>
 		<script >//SCENE
 			var scene = new THREE.Scene();
-			scene.background = new THREE.Color(0xCCCCCC);
+			scene.background = new THREE.Color(0xFFFFFF);
 			//CAMERA
 			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
 
@@ -29,35 +29,50 @@
 
 			//MODELS
 			// instantiate a loader
+			const entityNum = 25
+			const radius = 3
 			var objArray = [];
-			var loader = new THREE.ObjectLoader(geometry);
+			var loader = new THREE.ObjectLoader();
 			loader.load("js/man.json",function ( obj ) {
-				for(var i = 0; i<10; i++);{
 					obj.scale.set(0.3,0.3,0.3);
-					obj.position.x = i/2
-					// obj.position.x = Math.random()*100;
-					// obj.position.y = Math.random()*100;
-					// obj.position.z = Math.random()*100;
-					horse = obj
-					scene.add( horse );
-				}
+
+					for(var i = 0; i<entityNum;i++){
+						angle = 2*Math.PI*(i/entityNum)
+						
+						indiv = obj.clone();
+						//indiv.position.x = i
+						indiv.rotation.y = Math.PI
+						indiv.position.x = Math.cos(angle)*radius;
+						indiv.position.z = Math.sin(angle)*radius;
+						scene.add(indiv);
+						objArray.push(indiv);
+					}
+				
 			});
 
 
 
-
+			console.log(objArray)
 			var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 			var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 			var cube = new THREE.Mesh( geometry, material );
 			scene.add( cube );
-			camera.position.z = 15;
+			camera.position.y = 5;
 			//RENDER LOOP
 			function animate() {
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
 				requestAnimationFrame( animate );
 				cube.rotation.x += 0.01;
 				cube.rotation.y += 0.011;
-				horse.rotation.y += 0.01;
-				//horse.rotation.x += 0.005;
+
+				for(var i = 0; i<entityNum; i++){
+					objArray[i].rotation.y += 0.01;
+				}
+
+				camera.rotation.y += 0.01;
+				camera.rotation.z = 0.3;
 				renderer.render( scene, camera );
 			}
 			animate();
