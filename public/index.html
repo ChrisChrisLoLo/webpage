@@ -7,16 +7,16 @@
 	</head>
 	<body>
 		<h1>Header</h1>
-
-
+		<div id="graphicContainer" style="width:700px;height:300px"></div>
 
 
 		<script src="js/three.js"></script>
 		<script >//SCENE
 			var scene = new THREE.Scene();
 			scene.background = new THREE.Color(0xFFFFFF);
+			container = document.getElementById("graphicContainer");
 			//CAMERA
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+			var camera = new THREE.PerspectiveCamera( 75, container.style.width / container.style.height, 0.1, 1000 );
 
 
 			var ambientLight = new THREE.AmbientLight(0xBBBBBB);
@@ -24,8 +24,8 @@
 
 			//RENDERER
 			var renderer = new THREE.WebGLRenderer();
-			renderer.setSize( window.innerWidth, window.innerHeight );
-			document.body.appendChild( renderer.domElement );
+			renderer.setSize( container.style.width, container.style.height );
+			container.appendChild( renderer.domElement );
 
 			//MODELS
 			// instantiate a loader
@@ -60,8 +60,12 @@
 			camera.position.y = 5;
 			//RENDER LOOP
 			function animate() {
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				camera.aspect = window.innerWidth / window.innerHeight;
+				var width = parseInt(container.style.width,10);
+				var height = parseInt(container.style.height,10);
+
+				console.log(container.style.width)
+				renderer.setSize( width, height );
+				camera.aspect = width / height;
 				camera.updateProjectionMatrix();
 				requestAnimationFrame( animate );
 				cube.rotation.x += 0.01;
